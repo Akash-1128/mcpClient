@@ -2,6 +2,10 @@
 then POST a message/send JSON-RPC call.
 
     python test_client.py "Summarize my spending for July 2026"
+
+Point it at a deployment with AGENT_URL:
+
+    AGENT_URL=https://expenseagent.onrender.com python test_client.py "..."
 """
 
 import asyncio
@@ -15,10 +19,16 @@ import httpx
 BASE = os.environ.get("AGENT_URL", "http://localhost:9000").rstrip("/")
 
 
+def print_parts(parts):
+    for part in parts:
+        if part.get("kind") == "text":
+            print(f"\n{part['text']}")
+
+
 async def main() -> None:
     query = " ".join(sys.argv[1:]) or "What expense categories exist?"
 
-    async with httpx.AsyncClient(timeout=180) as http:
+    async with httpx.AsyncClient(timeout=300) as http:
         card = (await http.get(f"{BASE}/.well-known/agent-card.json")).json()
         print("=== AGENT CARD ===")
         print(f"{card['name']} v{card['version']} -> {card['url']}")
@@ -47,11 +57,16 @@ async def main() -> None:
             return
 
         result = body["result"]
-        print(f"state: {result.get('status', {}).get('state')}")
+        status = result.get("status", {})
+        print(f"state: {status.get('state')}")
+
+        # A failed task carries its reason in status.message; a completed one
+        # puts the answer in artifacts. Print whichever is present.
+        if status.get("message"):
+            print_parts(status["message"].get("parts", []))
+
         for artifact in result.get("artifacts") or []:
-            for part in artifact.get("parts", []):
-                if part.get("kind") == "text":
-                    print(f"\n{part['text']}")
+            print_parts(artifact.get("parts", []))
 
 
 if __name__ == "__main__":
