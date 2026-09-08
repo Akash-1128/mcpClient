@@ -1,0 +1,75 @@
+{
+  "capabilities": {
+    "pushNotifications": false,
+    "stateTransitionHistory": false,
+    "streaming": true
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "description": "Tracks and analyses personal expenses. Records new expenses and answers questions about spending by date range and category, backed by the ExpenseTracker MCP server.",
+  "name": "Expense Tracker Agent",
+  "preferredTransport": "JSONRPC",
+  "protocolVersion": "0.3.0",
+  "skills": [
+    {
+      "description": "Record a new expense with a date, amount, category, optional subcategory and note.",
+      "examples": [
+        "Add an expense of 1500 for movie on 2026-07-16 with note 'family outing'",
+        "Log 250 rupees spent on groceries today"
+      ],
+      "id": "add_expense",
+      "name": "Add Expense",
+      "tags": [
+        "expense",
+        "write",
+        "finance"
+      ]
+    },
+    {
+      "description": "List individual expense entries within an inclusive date range.",
+      "examples": [
+        "Show all expenses between 2026-07-01 and 2026-07-31",
+        "What did I spend on last week?"
+      ],
+      "id": "list_expenses",
+      "name": "List Expenses",
+      "tags": [
+        "expense",
+        "read",
+        "finance"
+      ]
+    },
+    {
+      "description": "Summarize spending totals grouped by category over a date range, optionally filtered to a single category.",
+      "examples": [
+        "Summarize my spending for July 2026",
+        "How much did I spend on travel this quarter?"
+      ],
+      "id": "summarize_expenses",
+      "name": "Summarize Expenses",
+      "tags": [
+        "expense",
+        "analytics",
+        "finance"
+      ]
+    },
+    {
+      "description": "List every expense category present in the database.",
+      "examples": [
+        "What expense categories exist?"
+      ],
+      "id": "list_categories",
+      "name": "List Categories",
+      "tags": [
+        "expense",
+        "metadata"
+      ]
+    }
+  ],
+  "url": "https://REPLACE-ME.ngrok-free.app/",
+  "version": "1.0.0"
+}

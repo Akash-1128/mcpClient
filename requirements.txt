@@ -1,0 +1,17 @@
+# A2A protocol server
+a2a-sdk[http-server]==0.3.26
+
+# Agent runtime
+langgraph
+langchain
+langchain-core
+langchain-mcp-adapters
+
+# LLM provider
+langchain-openai          # default, LLM_PROVIDER=openai
+# langchain-ollama        # local,   LLM_PROVIDER=ollama
+# langchain-anthropic     # hosted,  LLM_PROVIDER=anthropic
+
+python-dotenv
+uvicorn
+httpx
