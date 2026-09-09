@@ -14,7 +14,7 @@ from langgraph.prebuilt import create_react_agent
 load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 MCP_URL = os.environ.get(
-    "MCP_URL", "https://expense-gateway-6i2ud6.5sc6y6-1.usa-e2.cloudhub.io/expensemcp"
+    "MCP_URL", "https://expense-gateway-6i2ud6.5sc6y6-1.usa-e2.cloudhub.io/expensemcp/mcp"
 )
 
 SYSTEM_PROMPT = """You are an expense tracking assistant.
