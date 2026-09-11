@@ -3,6 +3,7 @@
 import os
 import base64
 from datetime import date
+import httpx
 
 from dotenv import load_dotenv
 
@@ -20,9 +21,10 @@ MCP_URL = os.environ.get(
 MCP_CLIENT_ID = os.environ["MCP_CLIENT_ID"]
 MCP_CLIENT_SECRET = os.environ["MCP_CLIENT_SECRET"]
 
-auth = base64.b64encode(
-    f"{MCP_CLIENT_ID}:{MCP_CLIENT_SECRET}".encode()
-).decode()
+mcp_auth = httpx.BasicAuth(
+    MCP_CLIENT_ID,
+    MCP_CLIENT_SECRET,
+)
 
 SYSTEM_PROMPT = """You are an expense tracking assistant.
 
@@ -111,9 +113,7 @@ class ExpenseAgent:
                 "expense-tracker": {
                     "transport": "streamable_http",
                     "url": MCP_URL,
-                    "headers":{
-                        "Authorization":f"Basic {auth}"
-                    }
+                    "auth":mcp_auth,
                 }
             }
         )
@@ -137,9 +137,7 @@ class ExpenseAgent:
                 {
                     "transport": "streamable_http", 
                     "url": MCP_URL,
-                    "headers":{
-                        "Authorization":f"Basic {auth}"
-                    },
+                    "auth": mcp_auth,
                 }
             }
         )
