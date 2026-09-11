@@ -13,13 +13,25 @@ CLIENT_ID = os.environ["MCP_CLIENT_ID"]
 CLIENT_SECRET = os.environ["MCP_CLIENT_SECRET"]
 
 
+def inspect_request(request):
+    print("OUTGOING REQUEST:", request.method, request.url)
+    print("HAS AUTH HEADER:", "authorization" in request.headers)
+    print(
+        "AUTH PREFIX:",
+        request.headers.get("authorization", "")[:20]
+    )
+
+
 async def main():
     print("URL:", MCP_URL)
     print("CLIENT ID:", CLIENT_ID)
     print("SECRET LENGTH:", len(CLIENT_SECRET))
 
     async with httpx.AsyncClient(
-        auth=httpx.BasicAuth(CLIENT_ID, CLIENT_SECRET)
+        auth=httpx.BasicAuth(CLIENT_ID, CLIENT_SECRET),
+        event_hooks={
+            "request": [inspect_request],
+        },
     ) as http_client:
 
         async with streamable_http_client(
