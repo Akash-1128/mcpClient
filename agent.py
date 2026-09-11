@@ -108,6 +108,10 @@ class ExpenseAgent:
         if self._graph is not None:
             return self._graph
 
+        print("MCP URL:", MCP_URL)
+        print("MCP CLIENT ID:", MCP_CLIENT_ID)
+        print("MCP SECRET LENGTH:", len(MCP_CLIENT_SECRET))
+
         client = MultiServerMCPClient(
             {
                 "expense-tracker": {
