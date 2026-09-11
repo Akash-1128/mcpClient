@@ -1,6 +1,7 @@
 """LangGraph agent that reasons over the ExpenseTracker MCP server."""
 
 import os
+import base64
 from datetime import date
 
 from dotenv import load_dotenv
@@ -16,6 +17,12 @@ load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 MCP_URL = os.environ.get(
     "MCP_URL", "https://expense-gateway-6i2ud6.5sc6y6-1.usa-e2.cloudhub.io/expensemcp/mcp"
 )
+MCP_CLIENT_ID = os.environ["MCP_CLIENT_ID"]
+MCP_CLIENT_SECRET = os.environ["MCP_CLIENT_SECRET"]
+
+auth = base64.b64encode(
+    f"{MCP_CLIENT_ID}:{MCP_CLIENT_SECRET}".encode()
+).decode()
 
 SYSTEM_PROMPT = """You are an expense tracking assistant.
 
@@ -104,6 +111,9 @@ class ExpenseAgent:
                 "expense-tracker": {
                     "transport": "streamable_http",
                     "url": MCP_URL,
+                    "headers":{
+                        "Authorization":f"Basic {auth}"
+                    }
                 }
             }
         )
@@ -122,7 +132,16 @@ class ExpenseAgent:
     async def tool_names(self) -> list[str]:
         """Used at startup to build the agent card's skills from the live server."""
         client = MultiServerMCPClient(
-            {"expense-tracker": {"transport": "streamable_http", "url": MCP_URL}}
+            {
+                "expense-tracker": 
+                {
+                    "transport": "streamable_http", 
+                    "url": MCP_URL,
+                    "headers":{
+                        "Authorization":f"Basic {auth}"
+                    },
+                }
+            }
         )
         return [t.name for t in await client.get_tools()]
 
